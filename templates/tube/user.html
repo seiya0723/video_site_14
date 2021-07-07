@@ -1,0 +1,98 @@
+{% extends "tube/base.html" %}
+{% load static %}
+
+
+
+{% block extra_head %}
+{{ block.super }}
+<script src="{% static 'tube/js/single.js' %}"></script>
+{% endblock %}
+
+
+
+{% block main %}
+    {% include "tube/search_form.html" %}
+
+    {% if user %}
+    <div>
+        <h2>{{ user.handle_name }}</h2>
+
+        <div>
+            {% if user.usericon %}
+            <img class="video_usericon" src="/media/{{ user.usericon }}" alt="icon">
+            {% else %}
+            <span class="comment_icon"><i class="fas fa-user"></i></span>
+            {% endif %}
+
+            <div>{{ user.self_introduction|linebreaksbr }}</div>
+            <div>{{ user.date_joined|date:"Y年m月d日 H時i分s秒" }}に登録</div>
+        </div>
+
+        {% if request.user.is_authenticated and request.user.id != user.id %}  {# 自分自身であればボタンを表示させない#}
+        <form id="follow_user_form" action="{% url 'tube:userfollow' user.id  %}" method="POST">
+            {% if request.user in user.followed.all %}
+            <button class="follow btn btn-primary" type="button">フォロー中</button>
+            {% else %}
+            <button class="follow btn btn-outline-primary" type="button">フォローする</button>
+            {% endif %}
+        </form>
+        <form id="block_user_form" action="{% url 'tube:userblock' user.id  %}" method="POST">
+            {% if request.user in user.blocked.all %}
+            <button class="block btn btn-primary" type="button">ブロック中</button>
+            {% else %}
+            <button class="block btn btn-outline-primary" type="button">ブロックする</button>
+            {% endif %}
+        </form>
+        {% endif %}
+
+        <h3>フォロー中ユーザー</h3>
+        {% for follow_user in follow_users %}
+        <div>
+            {% if follow_user.to_user.usericon %}
+            <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}"><img class="video_usericon" src="/media/{{ follow_user.to_user.usericon }}" alt="icon"></a>
+            {% else %}
+            <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+            {% endif %}
+            <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}">{{ follow_user.to_user.handle_name }}</a>
+        </div>
+        {% endfor%}
+
+        <h3>フォロワーユーザー</h3>
+        {% for follow_user in follower_users %}
+        <div>
+            {% if follow_user.from_user.usericon %}
+            <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}"><img class="video_usericon" src="/media/{{ follow_user.from_user.usericon }}" alt="icon"></a>
+            {% else %}
+            <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+            {% endif %}
+            <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}">{{ follow_user.from_user.handle_name }}</a>
+        </div>
+        {% endfor%}
+
+
+        <h3>ブロック中ユーザー</h3>
+        {# blockを変数名にしてしまうとシンタックスカラーなどで問題あり(テンプレートタグのblockと解釈される)のため、block_userとする #}
+        {% for block_user in block_users %}
+        <div>
+            {% if block_user.to_user.usericon %}
+            <a href="{% url 'tube:usersingle' block_user.to_user.id  %}"><img class="video_usericon" src="/media/{{ block_user.to_user.usericon }}" alt="icon"></a>
+            {% else %}
+            <a href="{% url 'tube:usersingle' block_user.to_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+            {% endif %}
+            <a href="{% url 'tube:usersingle' block_user.to_user.id  %}">{{ block_user.to_user.handle_name }}</a>
+        </div>
+        {% endfor%}
+
+
+    </div>
+    {% else %}
+    <div>ユーザーが見つかりませんでした</div>
+    {% endif %}
+
+
+
+
+
+{% endblock %}
+
+

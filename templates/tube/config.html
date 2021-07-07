@@ -1,0 +1,51 @@
+{% extends "tube/mypage_base.html" %}
+{% load static %}
+
+
+{% block mypage_content %}
+
+<h2>設定</h2>
+
+    {# {% include "tube/follow.html" %} #}
+
+    <h3>フォロー中ユーザー</h3>
+    {% for follow_user in follow_users %}
+    <div>
+        {% if follow_user.to_user.usericon %}
+        <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}"><img class="usericon" src="/media/{{ follow_user.to_user.usericon }}" alt="icon"></a>
+        {% else %}
+        <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+        {% endif %}
+        <a href="{% url 'tube:usersingle' follow_user.to_user.id  %}">{{ follow_user.to_user.handle_name }}</a>
+    </div>
+    {% endfor%}
+
+    <h3>フォロワーユーザー</h3>
+    {% for follow_user in follower_users %}
+    <div>
+        {% if follow_user.from_user.usericon %}
+        <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}"><img class="usericon" src="/media/{{ follow_user.from_user.usericon }}" alt="icon"></a>
+        {% else %}
+        <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+        {% endif %}
+        <a href="{% url 'tube:usersingle' follow_user.from_user.id  %}">{{ follow_user.from_user.handle_name }}</a>
+    </div>
+    {% endfor%}
+
+    <h3>ブロック中ユーザー</h3>
+    {# blockを変数名にしてしまうとシンタックスカラーなどで問題あり(テンプレートタグのblockと解釈される)のため、block_userとする #}
+    {% for block_user in block_users %}
+    <div>
+        {% if block_user.to_user.usericon %}
+        <a href="{% url 'tube:usersingle' block_user.to_user.id  %}"><img class="usericon" src="/media/{{ block_user.to_user.usericon }}" alt="icon"></a>
+        {% else %}
+        <a href="{% url 'tube:usersingle' block_user.to_user.id  %}"><span class="comment_icon"><i class="fas fa-user"></i></span></a>
+        {% endif %}
+        <a href="{% url 'tube:usersingle' block_user.to_user.id  %}">{{ block_user.to_user.handle_name }}</a>
+    </div>
+    {% endfor%}
+
+<!--ユーザーモデルに設定欄を追加させる-->
+
+
+{% endblock %}

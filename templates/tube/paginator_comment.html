@@ -1,0 +1,5 @@
+<ul class="pagination_area">
+    {% for page in pages %}
+    <input class="pagination_content pagination_button comment_page" type="button" value="{{ page.name }}" {% if page.now_flag %}id="now_flag"{% endif %}>
+    {% endfor %}
+</ul>

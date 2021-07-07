@@ -1,0 +1,6 @@
+<ul class="pagination_area">
+    {% for page in pages %}
+    <a class="page-link" {% if page.link %}href="{{ page.link }}"{% endif %}>{{ page.name }}</a>
+    {% endfor %}
+</ul>
+

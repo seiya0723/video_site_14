@@ -1,0 +1,173 @@
+{% extends "tube/base.html" %}
+{% load humanize %}
+{% load static %}
+{% load param_change %}
+
+{% block main %}
+
+{% block extra_head %}
+{{ block.super }}
+{% endblock %}
+
+
+
+{% block page_title %}{% endblock %}
+
+
+{% include "tube/search_form.html" %}
+
+
+    {% if recommends %}
+    <h2 class="violet">おすすめ</h2>
+
+    <div class="video_content_list">
+
+        <div class="video_content">
+            <a class="video_content_link" href="">
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="動画タイトル">
+                <div class="video_title">タイトル</div>
+            </a>
+        </div>
+
+    </div>
+    {% endif %}
+
+
+    <h2 >新着動画</h2>
+    <div class="video_content_list">
+
+        {% for latest in latests %}
+        <div class="video_content">
+            <a class="video_content_link" href="{% url 'tube:single' latest.id %}">
+                {% if latest.thumbnail %}
+                <img class="video_thumbnail" src="/media/{{ latest.thumbnail }}" alt="{{ latest.title }}">
+                {% else %}
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ latest.title }}">
+                {% endif %}
+            </a>
+
+
+            <div class="index_video_content_inner">
+                <div class="index_video_content_inner_left">
+                    {% if latest.user.usericon %}
+                    <a href="{% url 'tube:usersingle' latest.user.id %}"><img class="index_usericon" src="/media/{{ latest.user.usericon }}" alt="icon"></a>
+                    {% else %}
+                    <a href="{% url 'tube:usersingle' latest.user.id %}"><i class="fas fa-user index_icon"></i></a>
+                    {% endif %}
+                </div>
+
+                <div class="index_video_content_inner_right">
+                    <a href="{% url 'tube:single' latest.id %}">
+                        <div class="video_title">{{ latest.title }}</div>
+                    </a>
+                    <div>{{ latest.user.handle_name }} </div>
+                    <div>{{ latest.views }} views</div>
+                    <div>{{ latest.dt|date:"Y年m月d日" }}</div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="video_content">動画がありません</div>
+        {% endfor %}
+    </div>
+
+
+    {% if histories %}
+    <h2 class="violet">もう一度見る</h2>
+
+    <div class="video_content_list">
+
+        {% for history in histories %}
+        <div class="video_content">
+            <a class="video_content_link" href="{% url 'tube:single' history.target.id %}">
+                {% if history.target.thumbnail %}
+                <img class="video_thumbnail" src="/media/{{ history.target.thumbnail }}" alt="{{ history.target.title }}">
+                {% else %}
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ history.target.title }}">
+                {% endif %}
+            </a>
+
+            <div class="index_video_content_inner">
+                <div class="index_video_content_inner_left">
+                    {% if history.target.user.usericon %}
+                    <a href="{% url 'tube:usersingle' history.target.user.id %}"><img class="index_usericon" src="/media/{{ history.target.user.usericon }}" alt="icon"></a>
+                    {% else %}
+                    <a href="{% url 'tube:usersingle' history.target.user.id %}"><i class="fas fa-user index_icon"></i></a>
+                    {% endif %}
+                </div>
+
+                <div class="index_video_content_inner_right">
+                    <a href="{% url 'tube:single' history.target.id %}">
+                        <div class="video_title">{{ history.target.title }}</div>
+                    </a>
+                        <div>{{ history.target.user.handle_name }} </div>
+                        <div>{{ history.target.views }} views</div>
+                        <div>{{ history.target.dt|date:"Y年m月d日" }}</div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    {% if ranks %}
+    <h2>総合ランキング</h2>
+
+    <div class="video_content_list">
+        <div class="video_content">
+            <a class="video_content_link" href="">
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="動画タイトル">
+                <div class="video_title">タイトル</div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if follows %}
+    <h2 class="violet">フォローしたユーザーの新着動画</h2>
+
+    <div class="video_content_list">
+
+        {% for follow in follows %}
+        <div class="video_content">
+            <a class="video_content_link" href="{% url 'tube:single' follow.id %}">
+                {% if follow.thumbnail %}
+                <img class="video_thumbnail" src="/media/{{ follow.thumbnail }}" alt="{{ follow.title }}">
+                {% else %}
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ follow.title }}">
+                {% endif %}
+            </a>
+
+            <div class="index_video_content_inner">
+                <div class="index_video_content_inner_left">
+                    {% if follow.user.usericon %}
+                    <a href="{% url 'tube:usersingle' follow.user.id %}"><img class="index_usericon" src="/media/{{ follow.user.usericon }}" alt="icon"></a>
+                    {% else %}
+                    <a href="{% url 'tube:usersingle' follow.user.id %}"><i class="fas fa-user index_icon"></i></a>
+                    {% endif %}
+                </div>
+
+                <div class="index_video_content_inner_right">
+                    <a href="{% url 'tube:single' follow.id %}">
+                        <div class="video_title">{{ follow.title }}</div>
+                    </a>
+                        <div>{{ follow.user.handle_name }} </div>
+                        <div>{{ follow.views }} views</div>
+                        <div>{{ follow.dt|date:"Y年m月d日 H時" }}</div>
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="video_content">動画がありません</div>
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+{% endblock %}
+

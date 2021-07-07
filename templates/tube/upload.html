@@ -1,0 +1,64 @@
+{% extends "tube/mypage_base.html" %}
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+
+<script src="{% static 'tube/js/thumbs.js' %}"></script>
+<script src="{% static 'tube/js/upload.js' %}"></script>
+{% endblock %}
+
+
+{% block mypage_content %}
+
+<h2>動画アップロード</h2>
+
+<ul>
+    <li>mp4ファイルのみ対応しています。</li>
+    <li>ファイルサイズは上限200MBです。</li>
+</ul>
+
+        <div id="upload_message" class="upload_message"></div>
+
+        <form id="video_upload_form" action="{% url 'tube:upload' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <select class="select_form" name="category">
+                <option value="">カテゴリを選択してください</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% empty %}
+                <option value="">カテゴリがありません。</option>
+                {% endfor %}
+            </select>
+
+            <input class = "input_form_text" placeholder="タイトル..." name="title" maxlength="50">
+
+            <textarea class="textarea_form" name="description" placeholder="動画説明文..." rows="4" maxlength="300"></textarea>
+
+            <div>動画(mp4)：<input id="upload_form_video" class="darkorange" type="file" accept="video/mp4" name="movie"></div>
+
+            <!--TIPS:タブをdivで区切ると発動しなくなる、そこでbrタグを使って改行させる-->
+            <br class="my-2">
+
+
+            <input id="upload_tab_1" class="upload_tab_radio" type="radio" name="upload_tab" value="1" checked><label for="upload_tab_1" class="upload_tab_label">動画よりサムネイル指定</label>
+            <input id="upload_tab_2" class="upload_tab_radio" type="radio" name="upload_tab" value="2"><label for="upload_tab_2" class="upload_tab_label">別途サムネイル指定</label>
+
+
+            <div class="thumbnail_from_movie">
+                <div class="thumbnail_create_area">
+                    <div class="thumbnail_create_video"><video id="thumbnail_video" class="thumbnail_video" src="" controls muted></video></div>
+                    <div class="thumbnail_create_button"><button id="thumbnail_button" class="thumbnail_button" type="button"><i class="far fa-images"></i>サムネイル指定</button></div>
+                    <div class="thumbnail_create_canvas"><div class="thumbnail_create_canvas_explain">ここにサムネイルが表示される</div><canvas id="canvas"></canvas></div>
+                </div>
+            </div>
+
+
+            <div class="another_thumbnail">
+                <div>サムネイル(jpeg,png)：<input type="file" accept=".jpg,.png," name="thumbnail"></div>
+            </div>
+
+            <input id="upload" class="btn-gradient-radius" type="button" value="送信">
+        </form>
+
+{% endblock %}

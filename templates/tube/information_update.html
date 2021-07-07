@@ -1,0 +1,10 @@
+
+    <form id="information_update_form" action="{% url 'tube:useredit' request.user.id %}" >
+        {% csrf_token %}
+
+       {# <input class="input_form_text" type="text" value="{{ request.user.handle_name }}" name="handle_name" placeholder="ハンドルネーム"> #}
+        <textarea class="textarea_form" name="self_introduction" rows="4" placeholder="自己紹介">{{ request.user.self_introduction }} </textarea>
+        <input id="information_update" class="btn-gradient-success" type="button" value="編集">
+
+    </form>
+

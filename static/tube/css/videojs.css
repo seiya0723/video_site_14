@@ -1,0 +1,6 @@
+/* single.html video content*/
+.vjs-matrix .vjs-big-play-button {
+    background: rgb(255,75,75);
+    background: linear-gradient(25deg, rgba(255,75,75,1) 0%, rgba(255,132,38,1) 20%, rgba(235,255,65,1) 100%);
+}
+
