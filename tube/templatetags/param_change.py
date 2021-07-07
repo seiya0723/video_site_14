@@ -9,7 +9,7 @@ def param(request, key, value):
     return "?" + copied.urlencode()
 
 
-@register.inclusion_tag("tube/paginator.html")
+@register.inclusion_tag("tube/page/paginator.html")
 def generate_pagelink(request, key, start, end, now):
     PAGE_RANGE = 3
 
@@ -48,7 +48,7 @@ def generate_pagelink(request, key, start, end, now):
     return {"pages": pages}
 
 
-@register.inclusion_tag("tube/paginator_comment.html")
+@register.inclusion_tag("tube/page/paginator_ajax.html")
 def generate_pagelink_comment(request, key, start, end, now):
     PAGE_RANGE = 3
 

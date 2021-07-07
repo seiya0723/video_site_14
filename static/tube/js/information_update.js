@@ -38,7 +38,7 @@ function information_update(){
 
         console.log(data);
 
-        //setTimeout( function() { location.reload(); }, 1500);
+        setTimeout( function() { location.reload(); }, 1500);
 
     }).fail( function(xhr, status, error) {
         console.log(status + ":" + error );

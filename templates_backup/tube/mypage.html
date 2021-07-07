@@ -1,0 +1,119 @@
+{% extends "tube/mypage_base.html" %}
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+
+<script src="{% static 'tube/js/usericon.js' %}"></script>
+<script src="{% static 'tube/js/information_update.js' %}"></script>
+{% endblock %}
+
+{% block mypage_content %}
+
+
+
+    <h2>基本情報</h2>
+
+
+
+    <table>
+        {% if custom_user.usericon %}
+        <tr id="mypage_usericon_area">
+            {% include "tube/mypage_usericon.html" %}
+        </tr>
+        {% endif %}
+
+        <tr>
+            <td>ユーザー名</td>
+            <td>{{ custom_user.username }}</td>
+        </tr>
+        <tr>
+            <td>ハンドルネーム</td>
+            <td>{{ custom_user.handle_name }}</td>
+        </tr>
+        <tr>
+            <td>最終ログイン</td>
+            <td>{{ custom_user.last_login }}</td>
+        </tr>
+        <tr>
+            <td>メールアドレス</td>
+            <td>{{ custom_user.email }}</td>
+        </tr>
+        <tr>
+            <td>自己紹介</td>
+            <td>{{ custom_user.self_introduction }}</td>
+        </tr>
+    </table></br>
+
+
+    <input id="icon_tab1" class="icon_tab_radio" type="checkbox" name="icon_tab"><label for="icon_tab1" class="icon_tab_label">アイコン登録/変更</label>
+    <input id="icon_tab2" class="icon_tab_radio" type="checkbox" name="icon_tab"><label for="icon_tab2" class="icon_tab_label">基本情報登録/変更</label>
+
+
+    <div id="iconupload_hide_area">
+        <div class="user-icon-dnd-wrapper">
+            <input id="icon_upload1" type="file" name="usericon" accept=".jpg,.png">
+            <div id="drop_area">drag and drop<br>or<br>click here.</div>
+        </div>
+
+        <form id="icon_upload_form" name="icon_upload_form" method="POST" action="{% url 'tube:mypage' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="icon_canvas">
+                <div id="icon_clear_button"><i class="far fa-times-circle"></i></div>
+                <input id='scal' class="scaling" type='range' value='' min='5' max='400'><br>
+                <canvas id='cvs' width='300' height='300'></canvas><br>
+                <input id="icon_upload2" class="btn-gradient-radius" type="button" value="送信">
+            </div>
+        </form>
+    </div>
+    <div id="upload_message" class="upload_message"></div>
+
+    <div class="information_update_area">
+         {% include "tube/information_update.html" %}
+    </div>
+    <div id="delete_message" class="js_message"></div>
+
+    <h2>投稿した動画</h2>
+
+
+    <div class="video_content_list">
+        {% for video in videos %}
+        <div class="mypage_video_content">
+            <a class="video_content_link" href="{% url 'tube:single' video.id %}">
+                {% if video.thumbnail %}
+                <img class="mypage_thumbnail" src="/media/{{ video.thumbnail }}" alt="{{ video.title }}">
+                {% else %}
+                <img class="mypage_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ video.title }}">
+                {% endif %}
+
+                <div class="video_title">{{ video.title }}</div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="mypage_video_content"><p>投稿した動画はありません。<a href="{% url 'tube:upload' %}">アップロード</a>から投稿できます。</p></div>
+        {% endfor %}
+    </div>
+    
+    <h2>高く評価した動画</h2>
+
+    <div class="video_content_list">
+        {% for video in good_videos %}
+        <div class="mypage_video_content">
+            <a class="video_content_link" href="{% url 'tube:single' video.target.id %}">
+                {% if video.target.thumbnail %}
+                <img class="mypage_thumbnail" src="/media/{{ video.target.thumbnail }}" alt="{{ video.target.title }}">
+                {% else %}
+                <img class="mypage_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ video.target.title }}">
+                {% endif %}
+
+                <div class="video_title">{{ video.target.title }}</div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="video_content"><p>高評価した動画はありません。</div>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

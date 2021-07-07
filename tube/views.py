@@ -259,7 +259,7 @@ class SingleView(views.APIView):
                    "qr":qr,
                    }
 
-        return render(request, "tube/single.html", context)
+        return render(request, "tube/single/single.html", context)
 
     def post(self,request,video_pk,*args,**kwargs):
 
@@ -320,7 +320,7 @@ class SingleModView(LoginRequiredMixin,views.APIView):
                             "video":video,
                             }
 
-            content     = render_to_string('tube/comments.html', context, request)
+            content     = render_to_string('tube/single/comments.html', context, request)
 
             json        = { "error":False,
                             "message":"投稿完了",
@@ -399,7 +399,7 @@ class SingleModView(LoginRequiredMixin,views.APIView):
                    "video": video,
                    }
 
-        content = render_to_string('tube/rate.html', context, request)
+        content = render_to_string('tube/single/rate.html', context, request)
 
         json = {"error": False,
                 "message": "投稿完了",
@@ -475,12 +475,14 @@ class MyPageView(LoginRequiredMixin, views.APIView):
 
         videos = Video.objects.filter(user=request.user.id).order_by("-dt")
         good_videos = GoodVideo.objects.filter(user=request.user.id).order_by("-dt")
+        custom_user  = CustomUser.objects.filter(id=request.user.id).first()
 
         context = {"videos": videos,
                    "good_videos": good_videos,
+                   "custom_user": custom_user,
                    }
 
-        return render(request, "tube/mypage.html", context)
+        return render(request, "tube/mypage/mypage.html", context)
 
 
     def post(self,request, *args,**kwargs):
@@ -496,8 +498,14 @@ class MyPageView(LoginRequiredMixin, views.APIView):
             print("validation OK")
             serializer.save()
 
+            custom_user = CustomUser.objects.filter(id=request.user.id).first()
+            context     = {"custom_user":custom_user}
+
+            content     = render_to_string('tube/mypage/mypage_usericon.html', context ,request)
+            print(content)
             json = {"error": False,
                     "message":"アイコンが登録されました。",
+                    "content":content,
                     }
 
         else:
@@ -649,7 +657,7 @@ class UserSingleView(views.APIView):
                     "follower_users":follower_users,
                   }
 
-        return render(request, "tube/user.html", context)
+        return render(request, "tube/usersingle.html", context)
 
 usersingle  = UserSingleView.as_view()
 

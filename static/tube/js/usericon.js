@@ -212,13 +212,15 @@ function icon_upload2(){
             icon_upload_form_initialize();
 
 
-            //$("#mypage_usericon_area").html(data);
+            console.log(data.content);
+
+            $("#mypage_usericon_area").html(data.content);
         }
         $("#upload_message").text(data.message);
 
         console.log(data);
 
-        setTimeout( function() { location.reload(); }, 1500);
+        //setTimeout( function() { location.reload(); }, 1500);
 
 
     }).fail( function(xhr, status, error) {

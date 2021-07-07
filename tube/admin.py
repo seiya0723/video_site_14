@@ -33,8 +33,8 @@ class VideoAdmin(admin.ModelAdmin):
 
 class VideoCommentAdmin(admin.ModelAdmin):
 
-    list_display = [ "id","user","target","content","dt"]
-    list_editable = [ "user","content" ]
+    list_display = [ "id","format_user","target","content","dt"]
+    list_editable = [ "content" ]
 
     search_fields       = [ "content","dt","user" ]
     list_filter         = [ "content","user" ]
@@ -43,6 +43,14 @@ class VideoCommentAdmin(admin.ModelAdmin):
     list_max_show_all   = 20000
 
     date_hierarchy      = "dt"
+
+    def format_user(self,obj):
+        if obj.user.handle_name:
+            return obj.user.handle_name
+
+    format_user.short_description      = VideoComment.user.field.verbose_name
+    format_user.empty_value_display    = "名前がありません"
+
 
 class MyListAdmin(admin.ModelAdmin):
     list_display = [ "id","dt","target","format_user" ]
